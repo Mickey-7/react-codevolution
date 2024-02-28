@@ -1,0 +1,403 @@
+reference : https://www.youtube.com/watch?v=fG0Y7JbYSfY
+
+Redux Toolkit Intro
+Redux concers
+    -> requires too much boilerplate codes
+        - Action
+        - Action object
+        - Action creator
+        - Switch statement in a reducer
+    -> other packages have to be installed to work with redux
+        - Redux-thunk
+        - Immer
+        - Redux-devtools
+
+------------------------------------------------------------------------
+
+Redux Toolkit
+    - abstract over the setup process
+    - handle most common use cases
+    - include some useful utilities
+
+
+Project Setup
+
+create node project
+    -> open terminal
+    -> cd desktop
+    -> mkdir projectFolder
+    -> open project
+    -> open terminal
+    -> npm init --yes
+    -> npm i @reduxjs/toolkit
+    -> manually create index.js file
+    -> manually create app folder
+    -> create store.js under app folder
+    -> manually create features folder
+    -> manually create cake & icecream folder under features folder
+
+Cake Slice
+    -> create cakeSlice.js under cake folder
+    -> import createSlice
+        use require() because its a node js environment and not import because its not a react app
+            -> handles the definition of the following :
+                -> action type constant
+                -> an action object
+                -> an action creator
+                -> swithc update in the reducer
+                -> and immutable update (immer) in the reducer
+
+Configuring Store : https://www.youtube.com/watch?v=5EMyvYGzv0o
+
+    -> store.js
+        // import cakeSlice
+        const cakeReducer = require("../features/cake/cakeSlice")
+        const configureStore = require('@reduxjs/toolkit').configureStore
+        const store = configureStore({
+            reducer:{
+                cake:cakeReducer
+            }
+        })
+        module.exports = store
+    
+    -> index.js
+        // for dispatching actions
+        const cakeActions = require("./features/cake/cakeSlice").cakeActions
+        // import store
+        const store = require('./app/store')
+        console.log('Initial state ',store.getState())
+        const unsubscribe= store.subscribe(() => {
+            console.log('updated state ',store.getState())
+        })
+        store.dispatch(cakeActions.ordered())
+        store.dispatch(cakeActions.ordered())
+        store.dispatch(cakeActions.ordered())
+        store.dispatch(cakeActions.restocked(3))
+        unsubscribe()
+
+
+Ice Cream Feature : https://www.youtube.com/watch?v=Q-KZCLu5cbI
+    -> icecreamSlice.js
+        // import createSlice
+        const createSlice = require('@reduxjs/toolkit').createSlice
+        // create initialState
+        const initialState = {
+            numberOfIcecreams : 20
+        }
+        // create icecreamSlice
+        const icecreamSlice = createSlice({
+            name:'icecream',
+            initialState,
+            reducers:{
+                ordered: (state, action) => {
+                    state.numberOfIcecreams--
+                },
+                restocked : (state, action) => {
+                    state.numberOfIcecreams += action.payload
+                }
+            }
+        })
+        // for import to other files
+        module.exports = icecreamSlice.reducer
+        module.exports.icecreamActions = icecreamSlice.actions
+    
+    -> store.js - import the icecreamSlice 
+        // import cakeSlice
+        const cakeReducer = require("../features/cake/cakeSlice")
+        // import icecreamSlicw
+        const icecreamReducer = require('../features/icecream/icecreamSlice')
+        const configureStore = require('@reduxjs/toolkit').configureStore
+        const store = configureStore({
+            reducer:{
+                cake:cakeReducer,
+                icecream:icecreamReducer
+            }
+        }
+        module.exports = store
+
+    -> index.js - import and dispatch icecreamReducer
+        // for dispatching actions from cake
+        const cakeActions = require("./features/cake/cakeSlice").cakeActions
+        // for disptaching actions from icecream
+        const icecreamActions = require('./features/icecream/icecreamSlice').icecreamActions
+        // import store
+        const store = require('./app/store')
+        console.log('Initial state ',store.getState())
+        const unsubscribe= store.subscribe(() => {
+            console.log('updated state ',store.getState())
+        })
+        store.dispatch(cakeActions.ordered())
+        store.dispatch(cakeActions.ordered())
+        store.dispatch(cakeActions.ordered())
+        store.dispatch(cakeActions.restocked(3))
+        store.dispatch(icecreamActions.ordered())
+        store.dispatch(icecreamActions.ordered())
+        store.dispatch(icecreamActions.restocked(2))
+        unsubscribe()
+
+
+Logger Middleware for Redux Toolkit : https://www.youtube.com/watch?v=dUVXHMHJio0
+
+Install the Logger
+    - npm install redux-logger
+
+    Create a Logger 
+        -> store.js
+            // import cakeSlice
+            const cakeReducer = require("../features/cake/cakeSlice")
+            // import icecreamSlicw
+            const icecreamReducer = require('../features/icecream/icecreamSlice')
+            // for redux-logger
+            const reduxLogger = require('redux-logger')
+            const configureStore = require('@reduxjs/toolkit').configureStore
+            // for redux-logger
+            const logger = reduxLogger.createLogger()
+            const store = configureStore({
+                reducer:{
+                    cake:cakeReducer,
+                    icecream:icecreamReducer
+                },
+                // for redux-logger
+                middleware : (getDefaultMiddleware) => {
+                    getDefaultMiddleware().concat(logger)
+                }
+            })
+            module.exports = store
+
+        -> index.js
+            remove console.log on subscribe as logger will take care of it
+            
+                const unsubscribe= store.subscribe(() => {
+                    // commented out for redux-logger
+                    // console.log('updated state ',store.getState())
+                })
+
+    terminal output :
+        PS C:\Users\MMACARANAS\Desktop\rtk-demo> node index
+        Initial state  { cake: { numberOfCakes: 10 }, icecream: { numberOfIcecreams: 20 } }
+          action cake/ordered @ 14:39:28.704
+            prev state { cake: { numberOfCakes: 10 }, icecream: { numberOfIcecreams: 20 } }
+            action     { type: 'cake/ordered', payload: undefined }
+            next state { cake: { numberOfCakes: 9 }, icecream: { numberOfIcecreams: 20 } }
+          action cake/ordered @ 14:39:28.710
+            prev state { cake: { numberOfCakes: 9 }, icecream: { numberOfIcecreams: 20 } }
+            action     { type: 'cake/ordered', payload: undefined }
+            next state { cake: { numberOfCakes: 8 }, icecream: { numberOfIcecreams: 20 } }
+          action cake/ordered @ 14:39:28.712
+            prev state { cake: { numberOfCakes: 8 }, icecream: { numberOfIcecreams: 20 } }
+            action     { type: 'cake/ordered', payload: undefined }
+            next state { cake: { numberOfCakes: 7 }, icecream: { numberOfIcecreams: 20 } }
+          action cake/restocked @ 14:39:28.714
+            prev state { cake: { numberOfCakes: 7 }, icecream: { numberOfIcecreams: 20 } }
+            action     { type: 'cake/restocked', payload: 3 }
+            next state { cake: { numberOfCakes: 10 }, icecream: { numberOfIcecreams: 20 } }
+          action icecream/ordered @ 14:39:28.719
+            prev state { cake: { numberOfCakes: 10 }, icecream: { numberOfIcecreams: 20 } }
+            action     { type: 'icecream/ordered', payload: undefined }
+            next state { cake: { numberOfCakes: 10 }, icecream: { numberOfIcecreams: 19 } }
+          action icecream/ordered @ 14:39:28.725
+            prev state { cake: { numberOfCakes: 10 }, icecream: { numberOfIcecreams: 19 } }
+            action     { type: 'icecream/ordered', payload: undefined }
+            next state { cake: { numberOfCakes: 10 }, icecream: { numberOfIcecreams: 18 } }
+          action icecream/restocked @ 14:39:28.727
+            prev state { cake: { numberOfCakes: 10 }, icecream: { numberOfIcecreams: 18 } }
+            action     { type: 'icecream/restocked', payload: 2 }
+            next state { cake: { numberOfCakes: 10 }, icecream: { numberOfIcecreams: 20 } }
+        PS C:\Users\MMACARANAS\Desktop\rtk-demo> 
+   
+
+Extra Reducers : https://www.youtube.com/watch?v=NBbvaF3GK9U
+    if sales are through the roof and we want to reward customers for their support
+        -> for every cake they buy, we want to give an icecream for free
+        -> to do just that, in iceCreamReducer (redux-demo) add a new case
+            case CAKE_ORDERED:
+                return {
+                    ...state,
+                    state.numberOfIcecreams - 1
+                }
+        -> the cakeReducer will decrease numberOfCakes by 1 and 
+        -> the iceCreamReducer will decrease numberOfIcecreams by 1
+    
+    implementing above in Redux Toolkit using extraReducers
+    -> icecreamSlice.js
+        const icecreamSlice = createSlice({
+            name:'icecream',
+            initialState,
+            reducers:{
+                ordered: (state, action) => {
+                    state.numberOfIcecreams--
+                },
+                restocked : (state, action) => {
+                    state.numberOfIcecreams += action.payload
+                }
+            },
+            // added for extra reducers
+            extraReducers : (builder) => {
+                // the cake/ordered if from name and reducers key identifier inside the createSlice
+                builder.addCase("cake/ordered", (state, action) => {
+                    state.numberOfIcecreams-- 
+                }) 
+            }
+        })
+    -> store.js - comment out the logger middleware
+    -> index.js - added back the console.log on subscribe
+        const unsubscribe= store.subscribe(() => {
+            // commented out for redux-logger
+            // console.log('updated state ',store.getState())
+            
+            // added back for extraReducers
+            console.log('updated state ',store.getState())
+        })
+
+    terminal output :
+        PS C:\Users\MMACARANAS\Desktop\rtk-demo> node index
+        Initial state  { cake: { numberOfCakes: 10 }, icecream: { numberOfIcecreams: 20 } }
+        updated state  { cake: { numberOfCakes: 9 }, icecream: { numberOfIcecreams: 19 } }
+        updated state  { cake: { numberOfCakes: 8 }, icecream: { numberOfIcecreams: 18 } }
+        updated state  { cake: { numberOfCakes: 7 }, icecream: { numberOfIcecreams: 17 } }
+        updated state  { cake: { numberOfCakes: 10 }, icecream: { numberOfIcecreams: 17 } }
+        updated state  { cake: { numberOfCakes: 10 }, icecream: { numberOfIcecreams: 16 } }
+        updated state  { cake: { numberOfCakes: 10 }, icecream: { numberOfIcecreams: 15 } }
+        updated state  { cake: { numberOfCakes: 10 }, icecream: { numberOfIcecreams: 17 } }
+    numberOfIcecreams decreased for every numberOfCakes ordered
+
+
+Async Thunk : https://www.youtube.com/watch?v=Tay06Rk881Y
+    -> install axios - npm install axios
+    -> create user folder under features folder
+    -> create userSlice.js file under user folder
+        // import createSlice
+        const createSlice = require('@reduxjs/toolkit').createSlice
+        // import async thunk
+        const createAsyncThunk = require('@reduxjs/toolkit').createAsyncThunk
+        // import axios
+        const axios = require('axios')
+        const initialState = {
+            loading:false,
+            users:[],
+            error:""
+        }
+        // createAsyncThunk - generates pending, fulfilled and rejected action types
+        const fetchUsers = createAsyncThunk('user/fetchUsers',
+                () => {
+                    axios.get('https://jsonplaceholder.typicode.com/users/')
+                    .then((response) => {
+                        // return id only
+                        return response.date.map((user) => user.id)
+                    })
+                    // catch block is not needed as error are handled
+                }
+            )
+        const userSlice = createSlice({
+            name:'user',
+            initialState,
+            extraReducers: builder => {
+                builder.addCase(fetchUsers.pending, state => {
+                    state.loading = true
+                })
+                builder.addCase(fetchUsers.fulfilled, (state, action) => {
+                    state.loading = false
+                    state.users = action.payload
+                    state.error = ""
+                })
+                builder.addCase(fetchUsers.rejected, (state, action) => {
+                    state.loading = false
+                    state.users = []
+                    state.error = action.error.message
+                })
+            }
+        })
+        // export the userSlice
+        module.exports = userSlice.reducer
+        module.exports.fetchUsers = fetchUsers
+
+    -> store.js - add the userReducer
+        / import userReducer
+        const userReducer = require('../features/user/userSlice')
+
+        const store = configureStore({
+            reducer:{
+                cake:cakeReducer,
+                icecream:icecreamReducer,
+                user:userReducer
+            }
+            // ,
+            // for redux-logger
+            // commented out for extraReducers
+            // middleware : (getDefaultMiddleware) => {
+            //     return getDefaultMiddleware().concat(logger)
+            // }
+        })
+
+    -> index.js - import and and use the fetchUsers thunk
+        // for async thunk
+        const  fetchUsers = require('./features/user/userSlice').fetchUsers
+        ...
+        // for async thunk
+        store.dispatch(fetchUsers())
+
+    error encountered :
+
+        const abortController = new AbortController();
+                                ^
+
+        ReferenceError: AbortController is not defined
+    
+    root cause : node version 14.15.0 doesn't support AbortController
+
+    solution : update node version or install Polyfill
+
+        Polyfill solution :
+        -> npm install abortcontroller-polyfill
+        -> index.js - add the polyfill
+            // Include the abortcontroller-polyfill
+            require('abortcontroller-polyfill/dist/abortcontroller-polyfill-only');
+
+    terminal output :
+
+    Rejected scenario
+        PS C:\Users\MMACARANAS\Desktop\rtk-demo> node index
+        Initial state  {
+            cake: { numberOfCakes: 10 },
+            icecream: { numberOfIcecreams: 20 },
+            user: { loading: false, users: [], error: '' }
+        }
+        updated state  {
+            cake: { numberOfCakes: 10 },
+            icecream: { numberOfIcecreams: 20 },
+            user: { loading: true, users: [], error: '' }
+        }
+        updated state  {
+            cake: { numberOfCakes: 10 },
+            icecream: { numberOfIcecreams: 20 },
+            user: {
+                loading: false,
+                users: [],
+                error: 'Request failed with status code 404'
+            }
+        }
+
+    Fulfilled scenario
+        PS C:\Users\MMACARANAS\Desktop\rtk-demo> node index
+        Initial state  {
+            cake: { numberOfCakes: 10 },
+            icecream: { numberOfIcecreams: 20 },
+            user: { loading: false, users: [], error: '' }
+        }
+        updated state  {
+            cake: { numberOfCakes: 10 },
+            icecream: { numberOfIcecreams: 20 },
+            user: { loading: true, users: [], error: '' }
+        }
+        updated state  {
+            cake: { numberOfCakes: 10 },
+            icecream: { numberOfIcecreams: 20 },
+            user: {
+                loading: false,
+                users: [
+                1, 2, 3, 4,  5,
+                6, 7, 8, 9, 10
+                ],
+                error: ''
+            }
+        }

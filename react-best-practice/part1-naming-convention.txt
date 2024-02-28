@@ -1,0 +1,144 @@
+https://dev.to/sathishskdev/part-1-naming-conventions-the-foundation-of-clean-code-51ng
+
+Pascal Case - first letter of each word are capitalized
+1. React Component
+    const ToDo = () => {
+        //...
+    }
+2. Enumerations
+    const RequestType = {
+        //..
+    }
+
+Camel Case - each word begins with a capital letter except the first word
+1. Variable Names
+    const userName = "sathishsdev";
+2. Function Names
+    const getFullName = (firstName, lastName) => {
+        return `${firstName} ${lastName}`;
+    }
+3. Object Properties
+    const user = {
+        userName: "sathishsdev",
+        firstName: "Satish",
+        lastName: "Kumar"
+    }
+4. Custom Hooks
+    const useTodo = () => {
+        //..
+    }
+5. Higher Order Component
+    const withTimer = () => {
+        //..
+    }
+
+Kebab Case - separating with hyphens "-"
+1. CSS Class Names
+    .header-container{
+        display: "flex";
+    }
+2. Folder Names
+    src
+        todo-list //folder name
+            TodoList.jsx
+            TodoList.module.scss
+        todo-item //folder name
+            TodoItem.jsx
+
+SCREAMING_SNAKE_CASE - uppercase letters with words separated by underscore "_"
+1. Constants
+    const BASE_PATH = "https://domain.services/api";
+2. Enumeration Properties
+    const RequestType = {
+        //Properties in screaming snake case
+        GET: 'GET',
+        POST: 'POST',
+        PUT: 'PUT'
+        DELETE: 'DELETE'
+    }
+3. Global Variables
+    const ENVIRONMENT = 'PRODUCTION';
+    const PI = 3.1419;
+
+Higher-Order Component Naming Convention
+1. use "with" as prefix
+2. use "original component" as suffix
+    //HOC: name have "with" as prefix
+    //"Filter" is added as suffix which is the original component
+    const withFilter = () => {
+        //..
+    }
+    //Usage of the HOC
+    const Filter = withFilter(/*Component Name*/);
+
+Custome Hooks Naming Convention
+1. use "use" as prefix
+2. use "behaviour of hook" as suffix
+    //Custom Hook: useTimer
+    //name have "use" as prefix
+    //"Timer" is added as suffix which is behaviour of hook
+    const useTimer = (initialTime) => {
+        //... hook implementation
+    }
+    //Usage of the custom hook
+    const {time,start,stop,reset} = useTimer(60);
+
+Use more descriptive and specific names
+/*BAD CODE
+    const MyComponent = () => {
+        //what kind of component is this?
+    }
+
+    const data = getData() //what kind of data is this?
+
+    const onClick = () => {
+        //what does it do?
+    }
+*/
+/*GOOD CODE
+    const ProductDetails = () => {}
+
+    const productInfo = fetchProductInfo(); //fetches detailed product information
+
+    const addProductToCard = () => {
+        //add product to shopping cart
+    }
+*/
+
+Choosing Singular or Plural Naming
+/*GOOD CODE*/
+    const FetchConversation = () => {
+        //fetch single conversation
+    }
+
+    const fetchConversations = () => {
+        //fetch multiple conversations
+    }
+
+    const conversation = {/*Conversation Details*/}
+
+    const conversations = [
+        {/*Conversation Details*/},
+        {/*Conversation Details*/}
+    ]
+
+Avoid Excessive Abbreviations
+/*BAD CODE*/
+    const selUsr = {
+        usrId: '1',
+        usrNm: 'Satish Kumar',
+        usrEmail: 'sathsih@domain.com'
+    }
+
+    //Usage
+    selUsr.usrId
+
+/*GOOD CODE*/
+    const selectedUser = {
+        userId: 1,
+        userName: 'Sathish Kumar',
+        userEmail: 'sathish@domain.com'
+    }
+
+    //Usage
+    selectedUser.userId

@@ -1,0 +1,128 @@
+https://dev.to/sathishskdev/part-2-folder-structure-building-a-solid-foundation-omh
+
+Feature-Based structure
+src/
+├── features/       // Grouping features of the application
+│   └── ...         // Other feature folders
+├── shared/         // Shared elements used across multiple features
+│   ├── components/ // Reusable components
+│   ├── services/   // Shared services or API calls
+│   ├── hooks/      // Custom hooks
+│   ├── hoc/        // Higher-order components
+│   ├── slices/     // Redux slices for state management
+│   └── utils/      // Utility functions
+├── assets/         // Storing static assets
+│   ├── images/     // Storing image files
+│   ├── fonts/      // Storing font files
+│   └── ...
+├── styles/         // Global styles
+│   └── ...
+├── App.jsx         // Entry point of the application
+└── ...             // Other necessary files and folders
+
+features folder - based on different features of the application
+shared folder - store shared elements accross multiple features
+assests folder - storing static assets such as images, fonts or media files
+styles folder - put global styles or style-related files
+App.jsx - main component or entry point of the application
+
+
+In Facebook features - "News Feed", "Profile" and "Chat"
+
+News Feed sub-folders
+src/
+├── features/
+│   ├── news-feed/        // Folder for the News Feed feature
+│   │   ├── components/   // Components related to the News Feed
+│   │   ├── containers/   // Containers or pages related to the News Feed
+│   │   ├── services/     // Services or API calls specific to the News Feed
+│   │   ├── utils/        // Utility functions specific to the News Feed
+│   │   ├── slices/       // Redux Slices to manage states specific to News Feed
+│   │   └── ...
+│   └── ...               // Additional feature folders
+├── ...  
+├── App.jsx              
+└── ...
+
+components folder - presentations or dumb components are for rendering of data to user interface
+containers folder - smart components are responsible for data fetching, state management and logic functionality to presentation or dumb components 
+
+Containers sub-folder
+news-feed/
+├── components/                      // Folder for presentation components
+│   └── ...                          // Additional components related to the News Feed feature
+├── containers/                      // Folder for container components
+│   ├── news-feed-page/                // Folder for the News Feed page container
+│   │   ├── NewsFeedPage.jsx         // Container component for the News Feed page
+│   │   ├── NewsFeedPageStyles.css   // Styles specific to the News Feed page
+│   │   ├── NewsFeedPageUtils.js     // Utility functions specific to the News Feed page
+│   │   ├── useNewsFeedPage.js       // Custom hook for managing News Feed data, events and callbacks
+│   │   └── ...                      // Additional files related to the News Feed page
+│   └── ...  
+└── ...  
+
+
+Final Structure of app's folder
+
+src/
+├── features/
+│   ├── news-feed/
+│   │   ├── components/
+│   │   │   ├── PostItem.jsx
+│   │   │   ├── CommentItem.jsx
+│   │   │   ├── LikeButton.jsx
+│   │   │   └── ...
+│   │   ├── containers/
+│   │   │   ├── news-feed-page/
+│   │   │   │   ├── NewsFeedPage.jsx
+│   │   │   │   ├── NewsFeedPageStyles.css
+│   │   │   │   ├── NewsFeedPageUtils.js
+│   │   │   │   ├── useNewsFeedPage.js
+│   │   │   │   └── ...
+│   │   │   ├── PostDetailsPage.jsx
+/* No need to create separate folder if
+ container have less functionality and logic */
+│   │   │   └── ...
+│   │   ├── services/
+│   │   │   ├── newsFeedService.js
+│   │   │   └── ...
+│   │   ├── utils/
+│   │   │   ├── dateUtils.js
+│   │   │   └── ...
+│   │   ├── slices/
+│   │   │   ├── newsFeedSlice.js
+│   │   │   └── ...
+│   │   └── ...
+│   ├── profile/
+│   │   ├── components/
+│   │   │   ├── ProfileInfo.jsx
+│   │   │   ├── Avatar.jsx
+│   │   │   ├── ProfileSettings.jsx
+│   │   │   └── ...
+│   │   ├── containers/
+│   │   │   ├── ProfilePage.jsx
+│   │   │   └── ...
+│   │   ├── services/
+│   │   │   ├── profileService.js
+│   │   │   └── ...
+│   │   ├── utils/
+│   │   │   ├── validationUtils.js
+│   │   │   └── ...
+│   │   ├── slices/
+│   │   │   ├── profileSlice.js
+│   │   │   └── ...
+│   │   └── ...
+│   └── ...
+├── shared/
+│   ├── components/
+│   ├── services/
+│   ├── hooks/
+│   ├── hoc/
+│   ├── slices/
+│   ├── utils/
+│   ├── assets/
+│   └── styles/
+│   └── ...
+├── App.jsx
+└── ...
+

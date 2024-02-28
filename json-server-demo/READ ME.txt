@@ -1,0 +1,46 @@
+reference : https://youtube.com/watch?v=_1kNqAybxW0
+
+Project Setup
+    -> Open terminal and do the following below
+        PS C:\Users\MMACARANAS\Desktop> mkdir json-server-demo
+
+
+            Directory: C:\Users\MMACARANAS\Desktop
+
+
+        Mode                 LastWriteTime         Length Name
+        ----                 -------------         ------ ----
+        d-----         2/21/2024   5:16 PM                json-server-demo
+
+
+        PS C:\Users\MMACARANAS\Desktop> cd json-server-demo
+        PS C:\Users\MMACARANAS\Desktop\json-server-demo> npm init --y
+        Wrote to C:\Users\MMACARANAS\Desktop\json-server-demo\package.json:
+
+        {
+        "name": "json-server-demo",
+        "version": "1.0.0",
+        "description": "",
+        "main": "index.js",
+        "scripts": {
+            "test": "echo \"Error: no test specified\" && exit 1"
+        },
+        "keywords": [],
+        "author": "",
+        "license": "ISC"
+        }
+
+
+        PS C:\Users\MMACARANAS\Desktop\json-server-demo> 
+
+    -> Install json-server
+        PS C:\Users\MMACARANAS\Desktop\json-server-demo> npm install json-server
+
+
+    -> Modify package.json under scripts to include the json-server
+        "scripts": {
+            "test": "echo \"Error: no test specified\" && exit 1",
+            "serve-json": "json-server --watch db.json --port 4000"
+        },
+
+    -> Open terminal and run to test json server

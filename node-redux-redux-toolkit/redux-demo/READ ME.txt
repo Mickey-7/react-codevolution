@@ -1,0 +1,195 @@
+reference : https://www.youtube.com/watch?v=0awA5Uw6SJE&list=PLC3y8-rFHvwiaOAuTtVXittwybYIorRB3
+
+Redux
+-> JavaScript apps - can be used with Angular, Vue or Vanilla JavaScript
+-> State container - state shared by all the individual components of the app
+-> Predictable - pattern is enforced to ensure all state transitions are explicit and can be tracked
+
+Redux Toolkit
+-> standard way to write Redux logic in app
+-> less boilerplate code then Redux
+-> abstraction over Redux - hides difficult parts ensuring good developer experience
+
+React-Redux
+-> official Redux UI binding library for React
+React <---> React-Redux <---> Redux (Redux Toolkit)
+
+When should Redux be use in app
+-> large amount of app state that are needed in many places in app
+-> app state is updated frequently over time
+-> app has medium or large-sized code base and might be worked on by many people
+
+Course structure
+-> Learn Redux first
+-> Learn Redux Toolkit second
+-> Learn React Redux third
+
+
+
+reference : https://www.youtube.com/watch?v=ZySFOgejw0k&list=PLC3y8-rFHvwiaOAuTtVXittwybYIorRB3&index=2
+
+Getting Started - Setup
+-> open terminal
+-> mkdir redux-demo
+-> cd redux-demp
+-> npm init --yes
+-> npm i redux
+-> manually create index.js file
+-> add log for test - console.log("from index.js)
+-> back to terminal and type node index to run
+
+Three Core Concepts - Cake Shop
+Entities
+    Shop - stores cakes on shelf
+    Shopkeeper - behind the counter
+    Customer - at the store entrance
+Activities
+    Customer - order a cake
+    Shopkeeper - box a cake from the shelf
+               - receipt to keep track
+
+----------------------------------------------------------------------------
+Cake Shop Scenario      |   Redux   |        Purpose
+----------------------------------------------------------------------------
+Shop                    |   store   |        holds the state of your app
+Cake ordered            |   action  |        describes what happened
+Shopkeeper              |   reducer |        ties the store and actions together
+----------------------------------------------------------------------------
+
+
+reference : https://www.youtube.com/watch?v=6oAU5Kn9SBY&list=PLC3y8-rFHvwiaOAuTtVXittwybYIorRB3&index=4
+
+Three Principles
+-> 1st Principles - global state of app is stored as an object inside a single store
+    Cake Shop - assume we are tracking number of cakes on shelf
+    { numberOfCakes : 10 }
+-> 2nd Principles - only way to change state is to dispatch action. describes what happened
+    Cake Shop - scan qr code and place order  -CAKE_ORDERD
+    { type : "CAKE_ORDERD" }
+-> 3rd Principles - specify how the state tree is updated based on actions. write pure reducers
+    Cake Shop -> reducer is the shopkeeper
+    reducer - (previousState, action) => newState
+    const reducer  = (state = initialState, action) => {
+        switch (action, type){
+            case CAKE_ORDERD:
+                return{
+                    numberOfCakes: state.numberOfCakes - 1
+                }
+        }
+    }
+
+
+Three Principles Overview
+
+                    subscribed                  dispatch
+Redux store (State) ----------> JavaScript app  --------> Action
+    ^                                                        |
+    |                                                        |
+    |------------------> Reducer       <---------------------|
+
+
+
+
+reference :    https://www.youtube.com/watch?v=ir0F2PeJugo&list=PLC3y8-rFHvwiaOAuTtVXittwybYIorRB3&index=5
+
+Actions
+    -> plain JavaScript objects
+    -> have a type property that describes something that happened in app
+    -> carry some info from your app to redux store
+
+
+
+reference : https://www.youtube.com/watch?v=fy2FHo-iXDE&list=PLC3y8-rFHvwiaOAuTtVXittwybYIorRB3&index=6
+Reducers
+    -> specify how app's state changes in response to actions sent to store
+    -> function that accepts state and action as arguments and returns next state of app
+    -> (previousState, action) => newState
+
+
+
+reference : https://www.youtube.com/watch?v=WDJ2eidE-b0&list=PLC3y8-rFHvwiaOAuTtVXittwybYIorRB3&index=7
+Redux Store
+    -> one store for entire app
+    -> holds app state
+    -> allow access to state view getState()
+    -> allow state to be updated via dispatch(action)
+    -> registeds listeners via subscribe(listener)
+    -> handles unregistering of listenres via the function returned by subscribe(listener)
+
+
+
+
+reference : https://www.youtube.com/watch?v=kgCjXjJkZ-Y
+
+Immer - immutable update
+    nested-state.js
+        -> npm install immer
+
+
+
+reference : https://www.youtube.com/watch?v=rRtM82jBQJo
+
+Middleware
+    -> way to extend redux with custom functionality
+    -> provides third-party point between dispatching an action
+       and the moment it reaches the reducer
+    -> for logging, crash reporting, performing asynchronous task, etc..
+
+    npm install redux-logger
+
+
+reference : https://www.youtube.com/watch?v=uN-gpihDQRE
+
+Action
+    Synchronous Action
+    -> as soon as action was dispatched, state was immediately updated
+    -> if you dispatch CAKE_ORDERD action, the numberOfCakes was right away decremented by 1
+    -> same with ICECREAM_ORDERED action as well
+
+    Asynchronous Action
+    -> calls to fetch data from an end point and use that data in app
+
+    Fetch a list of users from an API end point and stores it in redux store
+    state?
+    actions?
+    reducer?
+
+    Data fetching properties
+        state = {
+            loading:true,   // display loading spinner in component
+            data:[]         // list of users
+            error:""        // display error to the user
+        }
+        actions 
+            FETCH_USERS_REQUESTED - fetch list of users
+            FETCH_USERS_SUCCEEDED - fetch successfully
+            FETCH_USERS_FAILED - error when fetching the data
+        reducer
+            case : FETCH_USERS_REQUESTED 
+                loading : true  
+            case : FETCH_USERS_SUCCEEDED 
+                loading : false
+                users : data (from API)
+            case : FETCH_USERS_FAILED 
+                loading : false
+                error : error (from API) 
+
+
+Async Action Creators
+    -> Axios - request to an API end point   
+    -> Redux-Thunk - define async action creators (Middleware)
+      npm i axios redux-thunk
+
+    encountered error : 
+
+        const chain = middlewares.map((middleware) => middleware(middlewareAPI)); 
+                                                    ^
+
+    TypeError: middleware is not a function
+
+    solution :
+
+        replaced .default to .thunk for redux-thunk
+
+    
+
